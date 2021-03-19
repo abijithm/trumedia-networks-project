@@ -59,10 +59,6 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
         justifyContent: "center",
-        // top: "20%",
-        // left: "40%"
-        // margin: "30%",
-        // marginLeft: "40%"
       },
   }));
 
@@ -81,6 +77,7 @@ export default function Tableheader(props){
 
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
+    const [open2, setOpen2] = React.useState(false);
     const [pa, setPa] = React.useState(0);
     const [ab, setAb] = React.useState(0);
     const [h, setH] = React.useState(0);
@@ -95,62 +92,16 @@ export default function Tableheader(props){
     const [obp, setObp] = React.useState(0);
     const [slg, setSlg] = React.useState(0);
     const [ops, setOps] = React.useState(0);
-  
-    const handleOpen = (playerId, fullName, playerImage, gameDate, abbrevName, teamImage, oppAbbrevName, oppImage, PA, AB, H, BB, K, HBP, SF, TB, RBI) => {
-        let gameSummary = fullName + " went " + H + "/" + AB + " against " + oppAbbrevName + " on " + gameDate;
-        setPa(pa+PA);
-        setAb(ab+AB);
-        setH(h+H);
-        setHr(hr+HR);
-        setBb(bb+BB);
-        setK(k+K);
-        setHbp(hbp+HBP);
-        setSf(sf+SF);
-        setTb(tb+TB);
-        setRbi(rbi+RBI);
-        // let ba = h/ab;
-        // baList.push(ba);
-        setBa(ba);
-        // row[10]+row[12]+row[14])/(obpDen+=row[9]+row[12]+row[14]+row[15]
-        let obp = (AB + BB + HBP)/(PA + BB + HBP + SF)
-        setObp(obp);
-        let slg = TB/PA;
-        setSlg(slg);
-        let ops = obp + slg;
-        setOps(ops);
-        setModalText(gameSummary);
-        console.log(fullName);
-        setOpen(true);
-    //   body(fullName,gameDate,opponent,ab,h,hr,bb,k,hbp,sf,rbi);
-    };
-  
-    const handleClose = () => {
-      setOpen(false);
-    };
 
-    const plotMetric = (metric) => {
-        let stat=[];
-        if(metric=="BA"){
-            stat=baList;
-        }
-        console.log(stat)
-        return(
-            <Line
-                data={stat}
-                options={{
-                    title:{
-                        display:true,
-                        text:'Batting avg over season per game',
-                        fontSize:20
-                    },
-                    legend:{
-                        display:true,
-                        position:'right'
-                }
-            }}
-            />
-        )
-    };
+    let hits = 0;
+    let abs = 0;
+    let obpNum = 0;
+    let obpDen = 0;
+    let slgNum = 0;
+    let slgDen = 0;
+    var baList = [];
+    var gameDateList = [];
+    // let opsmetric = 0;
 
     const {
         playerId, 
@@ -172,17 +123,79 @@ export default function Tableheader(props){
         TB, 
         RBI,
         rows
-    } = props;       
+    } = props;     
+
+    console.log('here')
+    rows.map(ro => {
+        hits+=ro[10];
+        abs+=ro[9];
+        baList.push((hits/abs).toFixed(3))
+        gameDateList.push(ro[3].split(" ")[0])
+    });
+    console.log(baList);
+
+    const data = {
+        labels: gameDateList,
+        datasets: [
+          {
+            label: "Batting Average",
+            data: baList,
+            fill: true,
+            backgroundColor: "rgba(75,192,192,0.2)",
+            borderColor: "rgba(75,192,192,1)"
+          },
+        //   {
+        //     label: "Second dataset",
+        //     data: [33, 25, 35, 51, 54, 76],
+        //     fill: false,
+        //     borderColor: "#742774"
+        //   }
+        ]
+      };
 
     
-    let hits = 0;
-    let abs = 0;
-    let obpNum = 0;
-    let obpDen = 0;
-    let slgNum = 0;
-    let slgDen = 0;
-    var baList = [];
-    // let opsmetric = 0;
+  
+    const handleOpen = (playerId, fullName, playerImage, gameDate, abbrevName, teamImage, oppAbbrevName, oppImage, PA, AB, H, BB, K, HBP, SF, TB, RBI) => {
+        let gameSummary = fullName + " went " + H + "/" + AB + " against " + oppAbbrevName + " on " + gameDate.split(" ")[0];
+        setPa(pa+PA);
+        setAb(ab+AB);
+        setH(h+H);
+        setHr(hr+HR);
+        setBb(bb+BB);
+        setK(k+K);
+        setHbp(hbp+HBP);
+        setSf(sf+SF);
+        setTb(tb+TB);
+        setRbi(rbi+RBI);
+        setBa(ba);
+        let obp = (AB + BB + HBP)/(PA + BB + HBP + SF)
+        setObp(obp);
+        let slg = TB/PA;
+        setSlg(slg);
+        let ops = obp + slg;
+        setOps(ops);
+        setModalText(gameSummary);
+        console.log(fullName);
+        setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const handleOpen2 = () => {
+        setOpen2(true);
+    }
+
+    const plotMetric = () => {
+        // console.log(open2)
+        setOpen2(true);
+        let stat=[];
+        // if(metric=="BA"){
+        //     stat=baList;
+        // }
+        // console.log(stat)
+    };
 
     return(
         <Paper className={classes.root}>
@@ -208,14 +221,13 @@ export default function Tableheader(props){
                             <StyledTableCell>{SF.name}</StyledTableCell>
                             <Tooltip title={TB.desc} placement='bottom'><StyledTableCell>{TB.name}</StyledTableCell></Tooltip>
                             <StyledTableCell>{RBI.name}</StyledTableCell>
-                            <StyledTableCell onClick={() =>plotMetric("BA")}>BA</StyledTableCell>
+                            <StyledTableCell onClick={() =>plotMetric()}>BA</StyledTableCell>
                             <StyledTableCell>OBP</StyledTableCell>
                             <StyledTableCell>SLG</StyledTableCell>
                             <StyledTableCell>OPS</StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                    {/* onClick={gameSummary(row[1],row[2],row[5],row[9],row[10],row[11],row[12],row[13],row[14],row[15],row[16]) */}
                         {rows.map(row => (
                             <TableRow hover role="checkbox" tabIndex={-1} key={row.code} onClick={() => handleOpen(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12],row[13],row[14],row[15],row[16],row[17])}>
                                     <TableCell>{row[0]}</TableCell>
@@ -256,66 +268,31 @@ export default function Tableheader(props){
                         {modalText}
                     </div>
                 </Modal>
+                <Modal
+                    align="center"
+                    open={open2}
+                    onClose={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    >
+                    <div style={modalStyle} className={classes.paper}>
+                        <Line
+                            data={data}
+                            // options={{
+                            //     title:{
+                            //         display:true,
+                            //         text:'Batting avg over season per game',
+                            //         fontSize:20
+                            //     },
+                            //     legend:{
+                            //         display:true,
+                            //         position:'right'
+                            // }
+                            // }}
+                            /> 
+                    </div>
+                </Modal>
             </TableContainer>
         </Paper>    
-
-        // <table>
-        //     <tbody>
-        //         <tr>
-        //             <td>
-        //                 <h5>{playerId}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{fullName}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{playerImage}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{gameDate}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{abbrevName}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{teamImage}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{oppAbbrevName}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{oppImage}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{PA}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{AB}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{H}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{BB}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{K}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{HBP}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{SF}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{TB}</h5>
-        //             </td>
-        //             <td>
-        //                 <h5>{RBI}</h5>
-        //             </td>
-        //         </tr>
-        //     </tbody>
-        // </table>
-    
     )
 }
