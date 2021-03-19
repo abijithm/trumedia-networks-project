@@ -78,30 +78,26 @@ export default function Tableheader(props){
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
-    const [pa, setPa] = React.useState(0);
-    const [ab, setAb] = React.useState(0);
-    const [h, setH] = React.useState(0);
-    const [hr, setHr] = React.useState(0);
-    const [bb, setBb] = React.useState(0);
-    const [k, setK] = React.useState(0);
-    const [hbp, setHbp] = React.useState(0);
-    const [sf, setSf] = React.useState(0);
-    const [tb, setTb] = React.useState(0);
-    const [rbi, setRbi] = React.useState(0);
-    const [ba, setBa] = React.useState(0);
-    const [obp, setObp] = React.useState(0);
-    const [slg, setSlg] = React.useState(0);
-    const [ops, setOps] = React.useState(0);
+    const [data, setData] = React.useState();
 
     let hits = 0;
+    let gameHits = 0;
     let abs = 0;
-    let obpNum = 0;
-    let obpDen = 0;
-    let slgNum = 0;
-    let slgDen = 0;
+    let gameAbs = 0;
+    let obpNum = 0
+    let gameObpNum = 0;
+    let obpDen = 0
+    let gameObpDen = 0;
+    let slgNum = 0
+    let gameSlgNum = 0;
+    let slgDen = 0
+    let gameSlgDen = 0;
     var baList = [];
+    var obpList = [];
+    var slgList = [];
+    var opsList = [];
     var gameDateList = [];
-    // let opsmetric = 0;
+    let stat = [];
 
     const {
         playerId, 
@@ -113,7 +109,7 @@ export default function Tableheader(props){
         oppAbbrevName, 
         oppImage, 
         PA, 
-        AB, 
+        AB,
         H, 
         HR,
         BB, 
@@ -125,57 +121,27 @@ export default function Tableheader(props){
         rows
     } = props;     
 
-    console.log('here')
     rows.map(ro => {
         hits+=ro[10];
         abs+=ro[9];
-        baList.push((hits/abs).toFixed(3))
-        gameDateList.push(ro[3].split(" ")[0])
+        baList.push((hits/abs).toFixed(3));
+
+        obpNum+=ro[10]+ro[12]+ro[14];
+        obpDen+=ro[9]+ro[12]+ro[14]+ro[15];
+        obpList.push((obpNum/obpDen).toFixed(3));
+
+        slgNum+=ro[16];
+        slgDen+=ro[9];
+        slgList.push((slgNum/slgDen).toFixed(3));
+
+        opsList.push(((obpNum/obpDen)+(slgNum/slgDen)).toFixed(3));
+        gameDateList.push(ro[3].split(" ")[0]);
     });
-    console.log(baList);
 
-    const data = {
-        labels: gameDateList,
-        datasets: [
-          {
-            label: "Batting Average",
-            data: baList,
-            fill: true,
-            backgroundColor: "rgba(75,192,192,0.2)",
-            borderColor: "rgba(75,192,192,1)"
-          },
-        //   {
-        //     label: "Second dataset",
-        //     data: [33, 25, 35, 51, 54, 76],
-        //     fill: false,
-        //     borderColor: "#742774"
-        //   }
-        ]
-      };
-
-    
   
     const handleOpen = (playerId, fullName, playerImage, gameDate, abbrevName, teamImage, oppAbbrevName, oppImage, PA, AB, H, BB, K, HBP, SF, TB, RBI) => {
         let gameSummary = fullName + " went " + H + "/" + AB + " against " + oppAbbrevName + " on " + gameDate.split(" ")[0];
-        setPa(pa+PA);
-        setAb(ab+AB);
-        setH(h+H);
-        setHr(hr+HR);
-        setBb(bb+BB);
-        setK(k+K);
-        setHbp(hbp+HBP);
-        setSf(sf+SF);
-        setTb(tb+TB);
-        setRbi(rbi+RBI);
-        setBa(ba);
-        let obp = (AB + BB + HBP)/(PA + BB + HBP + SF)
-        setObp(obp);
-        let slg = TB/PA;
-        setSlg(slg);
-        let ops = obp + slg;
-        setOps(ops);
         setModalText(gameSummary);
-        console.log(fullName);
         setOpen(true);
     };
   
@@ -183,19 +149,46 @@ export default function Tableheader(props){
       setOpen(false);
     };
 
-    const handleOpen2 = () => {
-        setOpen2(true);
-    }
 
-    const plotMetric = () => {
-        // console.log(open2)
+    const handleClose2 = () => {
+        setOpen2(false);
+      };
+
+    const plotMetric = (metric) => {
         setOpen2(true);
-        let stat=[];
-        // if(metric=="BA"){
-        //     stat=baList;
-        // }
-        // console.log(stat)
+        let label= "";
+        if(metric==="BA"){
+            stat=baList;
+            label="Batting Average"
+        }
+        if(metric==="OBP"){
+            stat=obpList;
+            label="On-Base Percentage"
+        }
+        if(metric==="SLG"){
+            stat=slgList;
+            label="Slugging Percentage"
+        }
+        if(metric==="OPS"){
+            stat=opsList;
+            label="On-Base plus Slugging Percentage"
+        }
+        let metricData = {
+            labels: gameDateList,
+            datasets: [
+              {
+                label: label,
+                data: stat,
+                fill: true,
+                backgroundColor: "rgba(75,192,192,0.2)",
+                borderColor: "rgba(75,192,192,1)"
+              },
+            ]
+          };
+        setData(metricData);
     };
+
+
 
     return(
         <Paper className={classes.root}>
@@ -221,10 +214,10 @@ export default function Tableheader(props){
                             <StyledTableCell>{SF.name}</StyledTableCell>
                             <Tooltip title={TB.desc} placement='bottom'><StyledTableCell>{TB.name}</StyledTableCell></Tooltip>
                             <StyledTableCell>{RBI.name}</StyledTableCell>
-                            <StyledTableCell onClick={() =>plotMetric()}>BA</StyledTableCell>
-                            <StyledTableCell>OBP</StyledTableCell>
-                            <StyledTableCell>SLG</StyledTableCell>
-                            <StyledTableCell>OPS</StyledTableCell>
+                            <StyledTableCell onClick={() =>plotMetric("BA")}>BA</StyledTableCell>
+                            <StyledTableCell onClick={() =>plotMetric("OBP")}>OBP</StyledTableCell>
+                            <StyledTableCell onClick={() =>plotMetric("SLG")}>SLG</StyledTableCell>
+                            <StyledTableCell onClick={() =>plotMetric("OPS")}>OPS</StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
@@ -248,10 +241,10 @@ export default function Tableheader(props){
                                     <TableCell>{row[15]}</TableCell> 
                                     <TableCell>{row[16]}</TableCell>
                                     <TableCell>{row[17]}</TableCell> 
-                                    <TableCell>{((hits+=row[10])/(abs+=row[9])).toFixed(3)}</TableCell>
-                                    <TableCell>{((obpNum+=row[10]+row[12]+row[14])/(obpDen+=row[9]+row[12]+row[14]+row[15])).toFixed(3)}</TableCell>
-                                    <TableCell>{((slgNum+=row[16])/(slgDen+=row[9])).toFixed(3)}</TableCell>
-                                    <TableCell>{(((obpNum/obpDen)+(slgNum/slgDen))).toFixed(3)}</TableCell>
+                                    <TableCell>{((gameHits+=row[10])/(gameAbs+=row[9])).toFixed(3)}</TableCell>
+                                    <TableCell>{((gameObpNum+=row[10]+row[12]+row[14])/(gameObpDen+=row[9]+row[12]+row[14]+row[15])).toFixed(3)}</TableCell>
+                                    <TableCell>{((gameSlgNum+=row[16])/(gameSlgDen+=row[9])).toFixed(3)}</TableCell>
+                                    <TableCell>{(((gameObpNum/gameObpDen)+(gameSlgNum/gameSlgDen))).toFixed(3)}</TableCell>
                                 </TableRow>  
                         ))
                     }
@@ -271,25 +264,15 @@ export default function Tableheader(props){
                 <Modal
                     align="center"
                     open={open2}
-                    onClose={handleClose}
+                    onClose={handleClose2}
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
                     >
                     <div style={modalStyle} className={classes.paper}>
                         <Line
                             data={data}
-                            // options={{
-                            //     title:{
-                            //         display:true,
-                            //         text:'Batting avg over season per game',
-                            //         fontSize:20
-                            //     },
-                            //     legend:{
-                            //         display:true,
-                            //         position:'right'
-                            // }
-                            // }}
-                            /> 
+                        >    
+                        </Line>
                     </div>
                 </Modal>
             </TableContainer>
