@@ -214,10 +214,10 @@ export default function Tableheader(props){
                             <StyledTableCell>{SF.name}</StyledTableCell>
                             <Tooltip title={TB.desc} placement='bottom'><StyledTableCell>{TB.name}</StyledTableCell></Tooltip>
                             <StyledTableCell>{RBI.name}</StyledTableCell>
-                            <StyledTableCell onClick={() =>plotMetric("BA")}>BA</StyledTableCell>
-                            <StyledTableCell onClick={() =>plotMetric("OBP")}>OBP</StyledTableCell>
-                            <StyledTableCell onClick={() =>plotMetric("SLG")}>SLG</StyledTableCell>
-                            <StyledTableCell onClick={() =>plotMetric("OPS")}>OPS</StyledTableCell>
+                            <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("BA")}>BA</StyledTableCell>
+                            <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("OBP")}>OBP</StyledTableCell>
+                            <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("SLG")}>SLG</StyledTableCell>
+                            <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("OPS")}>OPS</StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
@@ -225,12 +225,12 @@ export default function Tableheader(props){
                             <TableRow hover role="checkbox" tabIndex={-1} key={row.code} onClick={() => handleOpen(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12],row[13],row[14],row[15],row[16],row[17])}>
                                     <TableCell>{row[0]}</TableCell>
                                     <TableCell>{row[1]}</TableCell> 
-                                    <Avatar alt="Josh Bell" src={row[2]} align="center"/>
+                                    <Avatar alt="Josh Bell" className={classes.small} src={row[2]} style={{marginBottom: "5%", marginLeft: "20%", marginTop: "0%"}}/>
                                     <TableCell>{row[3]}</TableCell> 
                                     <TableCell>{row[4]}</TableCell>
-                                    <Avatar alt="Team Image" src={row[5]} align="center"/>
+                                    <Avatar alt="Team Image" className={classes.small}  src={row[5]} style={{margin: "20%"}}/>
                                     <TableCell>{row[6]}</TableCell>
-                                    <Avatar alt="Opponent Image" src={row[7]} align="center"/>
+                                    <Avatar alt="Opponent Image" className={classes.small}  src={row[7]} style={{margin: "20%"}}/>
                                     <TableCell>{row[8]}</TableCell>
                                     <TableCell>{row[9]}</TableCell> 
                                     <TableCell>{row[10]}</TableCell>
@@ -241,10 +241,10 @@ export default function Tableheader(props){
                                     <TableCell>{row[15]}</TableCell> 
                                     <TableCell>{row[16]}</TableCell>
                                     <TableCell>{row[17]}</TableCell> 
-                                    <TableCell>{((gameHits+=row[10])/(gameAbs+=row[9])).toFixed(3)}</TableCell>
-                                    <TableCell>{((gameObpNum+=row[10]+row[12]+row[14])/(gameObpDen+=row[9]+row[12]+row[14]+row[15])).toFixed(3)}</TableCell>
-                                    <TableCell>{((gameSlgNum+=row[16])/(gameSlgDen+=row[9])).toFixed(3)}</TableCell>
-                                    <TableCell>{(((gameObpNum/gameObpDen)+(gameSlgNum/gameSlgDen))).toFixed(3)}</TableCell>
+                                    <TableCell style={{backgroundColor: '#add8e6'}}>{((gameHits+=row[10])/(gameAbs+=row[9])).toFixed(3)}</TableCell>
+                                    <TableCell style={{backgroundColor: '#add8e6'}}>{((gameObpNum+=row[10]+row[12]+row[14])/(gameObpDen+=row[9]+row[12]+row[14]+row[15])).toFixed(3)}</TableCell>
+                                    <TableCell style={{backgroundColor: '#add8e6'}}>{((gameSlgNum+=row[16])/(gameSlgDen+=row[9])).toFixed(3)}</TableCell>
+                                    <TableCell style={{backgroundColor: '#add8e6'}}>{(((gameObpNum/gameObpDen)+(gameSlgNum/gameSlgDen))).toFixed(3)}</TableCell>
                                 </TableRow>  
                         ))
                     }
