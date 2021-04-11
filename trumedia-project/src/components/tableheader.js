@@ -196,24 +196,24 @@ export default function Tableheader(props){
                 <Table stickyHeader size="small" aria-label="sticky table">
                     <TableHead className={classes.head}>
                         <StyledTableRow className={classes.head}>
-                            <Tooltip title={playerId.desc} placement='bottom'><StyledTableCell>{playerId.name}</StyledTableCell></Tooltip>
-                            <Tooltip title={fullName.desc} placement='bottom'><StyledTableCell>{fullName.name}</StyledTableCell></Tooltip>
-                            <StyledTableCell>{playerImage.label}</StyledTableCell>
-                            <Tooltip title={gameDate.desc} placement='top'><StyledTableCell>{gameDate.name}</StyledTableCell></Tooltip>
-                            <Tooltip title={abbrevName.desc} placement='top'><StyledTableCell>{abbrevName.label}</StyledTableCell></Tooltip>
-                            <StyledTableCell>{teamImage.label}</StyledTableCell>
-                            <Tooltip title={oppAbbrevName.desc} placement='bottom'><StyledTableCell>{oppAbbrevName.label}</StyledTableCell></Tooltip>
-                            <StyledTableCell>{oppImage.label}</StyledTableCell>
-                            <StyledTableCell>{PA.name}</StyledTableCell>
-                            <StyledTableCell>{AB.name}</StyledTableCell>
-                            <StyledTableCell>{H.name}</StyledTableCell>
-                            <StyledTableCell>{HR.name}</StyledTableCell>
-                            <StyledTableCell>{BB.name}</StyledTableCell>
-                            <StyledTableCell>{K.name}</StyledTableCell>
-                            <StyledTableCell>{HBP.name}</StyledTableCell>
-                            <StyledTableCell>{SF.name}</StyledTableCell>
-                            <Tooltip title={TB.desc} placement='bottom'><StyledTableCell>{TB.name}</StyledTableCell></Tooltip>
-                            <StyledTableCell>{RBI.name}</StyledTableCell>
+                            <Tooltip title={playerId} placement='bottom'><StyledTableCell>{playerId}</StyledTableCell></Tooltip>
+                            <Tooltip title={fullName} placement='bottom'><StyledTableCell>{fullName}</StyledTableCell></Tooltip>
+                            <StyledTableCell>{playerImage}</StyledTableCell>
+                            <Tooltip title={gameDate} placement='top'><StyledTableCell>{gameDate}</StyledTableCell></Tooltip>
+                            <Tooltip title={abbrevName} placement='top'><StyledTableCell>{abbrevName}</StyledTableCell></Tooltip>
+                            <StyledTableCell>{teamImage}</StyledTableCell>
+                            <Tooltip title={oppAbbrevName} placement='bottom'><StyledTableCell>{oppAbbrevName}</StyledTableCell></Tooltip>
+                            <StyledTableCell>{oppImage}</StyledTableCell>
+                            <StyledTableCell>{PA}</StyledTableCell>
+                            <StyledTableCell>{AB}</StyledTableCell>
+                            <StyledTableCell>{H}</StyledTableCell>
+                            <StyledTableCell>{HR}</StyledTableCell>
+                            <StyledTableCell>{BB}</StyledTableCell>
+                            <StyledTableCell>{K}</StyledTableCell>
+                            <StyledTableCell>{HBP}</StyledTableCell>
+                            <StyledTableCell>{SF}</StyledTableCell>
+                            <Tooltip title={TB} placement='bottom'><StyledTableCell>{TB}</StyledTableCell></Tooltip>
+                            <StyledTableCell>{RBI}</StyledTableCell>
                             <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("BA")}>BA</StyledTableCell>
                             <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("OBP")}>OBP</StyledTableCell>
                             <StyledTableCell style={{backgroundColor: 'red'}} onClick={() =>plotMetric("SLG")}>SLG</StyledTableCell>

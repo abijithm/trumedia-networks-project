@@ -3,9 +3,9 @@ import React, {Component} from 'react'
 import joshbell from "../mlb-605137.json"
 import Tableheader from './tableheader'
 
-export default function JoshBell(){
-    console.log(joshbell.header)
-    console.log(joshbell.rows)
+export default function JoshBell(props){
+    // console.log(joshbell.header)
+    // console.log(joshbell.rows)
     return (
         <div>
             <Tableheader

@@ -4,8 +4,6 @@ import brandoncrawford from "../mlb-543063.json"
 import Tableheader from './tableheader'
 
 export default function BrandonCrawford(){
-    console.log(brandoncrawford.header)
-    console.log(brandoncrawford.rows)
     return (
         <div>
             <Tableheader

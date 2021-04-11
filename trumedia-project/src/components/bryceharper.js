@@ -4,8 +4,6 @@ import bryceharper from "../mlb-547180.json"
 import Tableheader from './tableheader'
 
 export default function BryceHarper(){
-    console.log(bryceharper.header)
-    console.log(bryceharper.rows)
     return (
         <div>
             <Tableheader
